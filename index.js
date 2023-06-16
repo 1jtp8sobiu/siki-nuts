@@ -423,7 +423,7 @@ function create_postSig(nonce, query, headers, monakey, s) {
 const parse_read_cgi = (headers, html) => {
   if (!html) return
   let lines = []
-  let patterns = [parse_pattern1, parse_pattern2]
+  let patterns = [parse_pattern3, parse_pattern1, parse_pattern2]
   for (let f of patterns) {
     let l = f(headers, html)
     if (l) {
@@ -496,5 +496,39 @@ const parse_pattern2 = (headers, html) => {
     data.push(num == 1 ? title : "")
     lines.push(data.join("<>"))
   }
+  return lines.length ? lines : undefined
+}
+
+const parse_pattern3 = (headers, html) => {
+  const thread_regexp = new RegExp(/<article id="(\d+)".*?>(.*?)<\/article>/, 'g')
+  const res_regexp = new RegExp(/<span class="postusername">(.*?)<\/span><\/summary><span class="date">(.*?)<\/span><span class="uid">(.*?)<\/span>(?:<span class="be(.*?)<\/span>)?.*?<section class="post-content">(.*?)<\/section>/)
+
+  let lines = []
+  let [, title] = html.match(/<title>([^\n]+)\s?\n?<\/title>/s) || []
+  for (let res of html.matchAll(thread_regexp)) {
+    let [, num, tags] = res
+    if (num === undefined) continue
+    let [, name, date, id, bedata, message] = tags.match(res_regexp) || []
+    let [, nid, bebase, bp] = bedata?.match(/<a href=".*?(\d+)".*?>\?([^<]+)<\/a>/) || []
+    if (bp) {
+      id = nid + `BE:${bebase}-${bp}`
+    }
+    let di = date + ' ' + id
+    let [, mail, nname] = name?.match(/<a href="mailto:([^"]+)">(.*?)<\/a>/) || []
+    if (mail !== undefined) {
+      name = nname
+    }
+    let data
+    if (message) {
+      message = message.replace(/<span class="AA">(.*?)<\/span>$/, "$1")
+      message = message.replace(/<a .*?href=.*?>((?:&gt;|http).*?)<\/a>/g, "$1")
+      data = [name, mail ?? "", di, message]
+    } else {
+      data = ['', '', '', 'broken']
+    }
+    data.push(num == 1 ? title : "")
+    lines.push(data.join("<>"))
+  }
+
   return lines.length ? lines : undefined
 }

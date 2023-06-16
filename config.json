@@ -1,10 +1,10 @@
 {
-  "APP_KEY": "hRG8Mi2B5KBy7Verp5dvx23MKXWdrD",
-  "HM_KEY": "Vd2lLFTXQkpczSBgySsCHIKka7F4EG",
+  "APP_KEY": "a6kwZ1FHfwlxIKJWCq4XQQnUTqiA1P",
+  "HM_KEY": "ZDzsNQ7PcOOGE2mXo145X6bt39WMz6",
   "RONIN_ID": "",
   "RONIN_PW": "",
   "DAT_USER_AGENT": "",
-  "POST_USER_AGENT": "Monazilla/1.00 JaneStyle_Android/2.4.3 Dalvik/2.1.0 (Linux; U; Android 12; Pixel 3 Build/SP1A.210812.016.C2)",
+  "POST_USER_AGENT": "Monazilla/1.00 JaneStyle/4.23 Windows/10.0.19045",
   "API_POST": true,
   "API_DAT": true,
   "RONIN_POST": false,
